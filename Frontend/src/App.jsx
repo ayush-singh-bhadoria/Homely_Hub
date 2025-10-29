@@ -1,9 +1,19 @@
 import "./App.css";
-
+import Main from "./components/home/Main";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PropertyList from "./components/home/PropertyList";
+import PropertyListing from "./components/propertyListing/PropertyListing";
 function App() {
   return (
     <div className="App">
-      <h1>Let's Start the project</h1>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main/>}>
+             <Route index element={<PropertyList/>}/>
+             <Route path="propertylist/:id" element={<PropertyListing/>}/>
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
