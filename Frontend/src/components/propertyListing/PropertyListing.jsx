@@ -1,6 +1,9 @@
 import React from 'react'
 import PropertyImg from './PropertyImg'
 import "../../css/PropertyListing.css";
+import PropertyAmenities from './PropertyAmenities';
+import PaymentForm from './PaymentForm';
+import PropertyMapInfo from './PropertyMapInfo';
 const PropertyListing = () => {
   return (
     <div className='property-container'>
@@ -16,8 +19,18 @@ const PropertyListing = () => {
           <p className='property-description'> THis is a simple description of a luxury villa located near the beach. Perfect for families and groups <br/><br/>
           Max number of guests : 6
            </p>
+           <hr/>
+           <PropertyAmenities amenities={["Wifi","Kitchen","Pool","AC"]}/>
         </div>
-
+        <div className='property-payment col-md-4 col-sm-12 col-12'>
+          <PaymentForm/>
+        </div>
+      </div>
+      <hr/>
+      <div className='property-map'>
+        <div className='map-image-exinfo-container row'>
+          <PropertyMapInfo/>
+        </div>
       </div>
     </div>
   )
