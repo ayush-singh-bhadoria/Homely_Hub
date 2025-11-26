@@ -18,17 +18,19 @@ const propertySlice = createSlice({
             state.totalProperties = action.payload.all_properties;
             state.loading = false; 
         },
-        updateSearchParams:{state,action} = () =>{
-            state.searchParams = Object.keys(action.payload).length === 0 ? {}: {
+        updateSearchParams:(state,action) =>{
+            state.searchParams = Object.keys(action.payload).length === 0 ?{}
+            :{
                 ...state.searchParams,
-                ...action.payload
-            }
+                ...action.payload,
+            };
         },
         getErrors(state,action){
-            state.error = action.payload
+            state.error = action.payload;
+            state.loading = false;
         }
     }
 })
 
 export const propertyAction = propertySlice.actions;
-export default propertySlice
+export default propertySlice;

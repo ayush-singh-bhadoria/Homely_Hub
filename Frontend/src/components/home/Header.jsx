@@ -1,40 +1,99 @@
-import React from 'react'
-import "../../css/Home.css"
-import Search from './Search'
-import Filter from './Filter'
+// src/components/Home/Header.jsx
+import React from "react";
+import "../../css/Home.css";
+import Search from "./Search";
+import Filter from "./Filter";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../../store/User/user-action"; // 👈 use same name
+import { propertyAction } from "../../store/Property/property-slice";
+import { getAllProperties } from "../../store/Property/property-action";
+import toast from "react-hot-toast";
 
 const Header = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logoutUser = () => {
+    dispatch(logOut()); // 👈 this matches the import now
+    toast.success("User has Logged Out successfully");
+    navigate("/");
+  };
+
+  const refreshFunction = () => {
+    dispatch(propertyAction.updateSearchParams({}));
+    dispatch(getAllProperties());
+  };
+
   return (
     <>
-    <nav className='header row sticky-top'>
-      <img src='/assets/logo.png' alt='logo' className='logo'/>
+      <nav className="header row sticky-top">
+        <Link to="/">
+          <img
+            src="/assets/logo.png"
+            alt="logo"
+            className="logo"
+            onClick={refreshFunction}
+          />
+        </Link>
 
-      <div className='search_filter'>
-        <Search/>
-        <Filter/>
-        </div> 
+        <div className="search_filter">
+          <Search />
+          <Filter />
+        </div>
 
-      <span className='material-symbols-outlined web_logo'>
-      account_circle
-      </span>
-      <div className='dropdown'>
-        <span className='material-symbols-outlined web_logo dropdown-toggle' role='button' id="dropdownMenuLink"
-        data-bs-toggle="dropdown"
-        aria-expanded="false">
-            <img src='/assets/avatar.png' className='user-img rounded-circle w-25 h-25' alt='icon'/>
-        </span>
-        <ul className='dropdown-menu' aria-labelledby='dropdownMenuLink'>
-            <li>
-                <a className='dropdown-item' href='/profile'> My Account</a>
-            </li>
-            <li>
-                <button className='dropdown-item'>Logout</button>
-            </li>
-        </ul>
-      </div>
-    </nav>
+        {/* If NOT logged in */}
+        {!isAuthenticated && !user && (
+          <Link to="/login">
+            <span className="material-symbols-outlined web_logo">
+              account_circle
+            </span>
+          </Link>
+        )}
+
+        {/* If logged in */}
+        {isAuthenticated && user && (
+          <div className="dropdown">
+            <span
+              className="material-symbols-outlined web_logo dropdown-toggle"
+              role="button"
+              href=" "
+              id="dropdownMenuLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {user?.avatar?.url ? (
+                <img
+                  src={user.avatar.url}
+                  className="user-img rounded-circle w-25 h-25"
+                  alt="icon"
+                />
+              ) : (
+                "account_circle"
+              )}
+            </span>
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <li>
+                <Link className="dropdown-item" to="/profile">
+                  My Account
+                </Link>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  type="button"
+                  onClick={logoutUser}
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </nav>
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
